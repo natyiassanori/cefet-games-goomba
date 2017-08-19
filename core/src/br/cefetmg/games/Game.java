@@ -5,7 +5,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
  * A classe principal de uma aplicação LibGDX deve herdar de ApplicationAdapter,
@@ -24,6 +28,18 @@ public class Game extends ApplicationAdapter {
 
     private SpriteBatch batch;
     private Texture[] mapLevelsTextures;
+    private Sprite jogador;
+    private Texture fig;
+    
+    Texture spriteSheet;
+    TextureRegion[][] quadrosDaAnimacao;
+    Animation andarParaFrente;
+    float tempoDaAnimacao;
+    
+    private int x=30;
+    private int y=10;
+    
+    Goomba goomba;
     
     /**
      * No método create colocamos código de inicialização do jogo. Por exemplo,
@@ -34,8 +50,27 @@ public class Game extends ApplicationAdapter {
     @Override
     public void create() {
         batch = new SpriteBatch();
-        mapLevelsTextures = new Texture[2];
+        mapLevelsTextures = new Texture[3];
         mapLevelsTextures[0] = new Texture("map-level-1.png");
+        mapLevelsTextures[1] = new Texture("map-level-2.png");
+        mapLevelsTextures[2] = new Texture("goomba.png");
+        
+        fig = new Texture("goomba.png");
+        jogador = new Sprite(fig);
+        goomba = new Goomba(mapLevelsTextures[2]);
+        //jogador.setPosition(30, 10);
+        
+        /*spriteSheet = new Texture("goomba-spritesheet.png");
+        quadrosDaAnimacao = TextureRegion.split(spriteSheet, 21, 24);
+        andarParaFrente = new Animation(0.1f, new TextureRegion[] {
+          quadrosDaAnimacao[0][0], // 1ª linha, 1ª coluna
+          quadrosDaAnimacao[0][1], // idem, 2ª coluna
+          quadrosDaAnimacao[0][2],
+          quadrosDaAnimacao[0][3],
+          quadrosDaAnimacao[0][4],
+        });
+        andarParaFrente.setPlayMode(PlayMode.LOOP_PINGPONG);
+        tempoDaAnimacao = 0;*/
 
         
         // cor de fundo da tela: branco
@@ -72,6 +107,11 @@ public class Game extends ApplicationAdapter {
         batch.begin();        
             // desenhos são realizados aqui
             batch.draw(mapLevelsTextures[0], 0, 0);
+            //batch.draw(jogador, 30, 10);
+            goomba.render(batch);
+            
+            //batch.draw(andarParaFrente.getKeyFrame(tempoDaAnimacao), x, y);
+            batch.draw(mapLevelsTextures[1], 0, 0);
 
         batch.end();
     }
@@ -90,7 +130,10 @@ public class Game extends ApplicationAdapter {
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
             Gdx.app.exit();
         }
-
+        goomba.update();
+        
+        
+        //tempoDaAnimacao += Gdx.graphics.getDeltaTime();
         // ...
     }
     
